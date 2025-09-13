@@ -1,0 +1,2059 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GermanCity RP - Roblox Server</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1565C0;
+            --secondary: #1E88E5;
+            --accent: #FF9800;
+            --dark-blue: #0D47A1;
+            --light-blue: #E3F2FD;
+            --dark: #1A237E;
+            --light: #ffffff;
+            --success: #4CAF50;
+            --error: #F44336;
+            --warning: #FFC107;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark-blue), var(--primary));
+            color: white;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Partikel-Hintergrund */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        /* Modal für Login/Registrierung */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: rgba(19, 35, 112, 0.95);
+            padding: 2.5rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: modalFadeIn 0.5s;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: #FFEB3B;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+        }
+        
+        .modal-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #FFEB3B;
+            font-size: 1.8rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #E3F2FD;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.3);
+        }
+        
+        .form-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, var(--accent), #FFEB3B);
+            color: #1A237E;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+        
+        .form-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #E3F2FD;
+        }
+        
+        .form-footer a {
+            color: #FFEB3B;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            overflow: hidden;
+            border: 3px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-menu {
+            display: none;
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            background: rgba(19, 35, 112, 0.95);
+            border-radius: 10px;
+            padding: 1rem;
+            width: 250px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1001;
+            backdrop-filter: blur(10px);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-details {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            color: #FFEB3B;
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            color: #E3F2FD;
+        }
+        
+        .user-actions {
+            list-style: none;
+        }
+        
+        .user-actions li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-actions a {
+            display: block;
+            padding: 8px 10px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .user-actions a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #FFEB3B;
+        }
+        
+        .logout-btn {
+            background: rgba(244, 67, 54, 0.2);
+            color: #F44336 !important;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(244, 67, 54, 0.3) !important;
+        }
+        
+        .header-btns {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .login-btn, .register-btn {
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .login-btn {
+            background: transparent;
+            border: 2px solid #FFEB3B;
+            color: #FFEB3B;
+        }
+        
+        .register-btn {
+            background: linear-gradient(to right, var(--accent), #FFEB3B);
+            color: #1A237E;
+            border: none;
+        }
+        
+        .login-btn:hover, .register-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        header {
+            background: rgba(13, 71, 161, 0.8);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.7s ease;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(to right, #FF9800, #FFEB3B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF9800, #FFEB3B);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 5px 10px;
+            border-radius: 4px;
+            position: relative;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent);
+            transition: width 0.3s;
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        nav a:hover {
+            color: #FFEB3B;
+        }
+        
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin-top: 70px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(13, 71, 161, 0.7);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            animation: fadeIn 1.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hero h2 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--accent), #FFEB3B);
+            color: #1A237E;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 152, 0, 0.6);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover::after {
+            left: 100%;
+        }
+        
+        section {
+            padding: 5rem 0;
+            position: relative;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+        
+        .section-title h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        .section-title p {
+            color: #E3F2FD;
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.4s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .feature-icon {
+            font-size: 3.5rem;
+            color: #FFEB3B;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .feature-card p {
+            color: #E3F2FD;
+        }
+        
+        .rules-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .rule-category {
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s;
+        }
+        
+        .rule-category.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .rule-category h3 {
+            color: #FFEB3B;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid var(--accent);
+            font-size: 1.6rem;
+        }
+        
+        .rule-list {
+            list-style-position: inside;
+            margin-left: 1rem;
+        }
+        
+        .rule-list li {
+            margin-bottom: 0.8rem;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .rule-list li:hover {
+            background: rgba(0, 0, 0, 0.3);
+            transform: translateX(5px);
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .gallery-item {
+            height: 220px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.8s;
+        }
+        
+        .gallery-item.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        
+        .team-member {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: all 0.5s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        
+        .team-member.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
+        }
+        
+        .team-img {
+            height: 280px;
+            overflow: hidden;
+        }
+        
+        .team-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .team-member:hover .team-img img {
+            transform: scale(1.1);
+        }
+        
+        .team-info {
+            padding: 2rem;
+        }
+        
+        .team-info h3 {
+            margin-bottom: 0.5rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .team-role {
+            color: #FFEB3B;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .team-social {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        
+        .team-social a {
+            display: inline-flex;
+            width: 35px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .team-social a:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .join {
+            background: linear-gradient(135deg, var(--dark-blue), var(--primary));
+            text-align: center;
+            padding: 6rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .join::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80') no-repeat center center/cover;
+            opacity: 0.2;
+        }
+        
+        .join h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .join p {
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            font-size: 1.3rem;
+            position: relative;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        footer {
+            background-color: rgba(13, 28, 126, 0.95);
+            padding: 4rem 0 2rem;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            text-align: left;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: #FFEB3B;
+            font-size: 1.5rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-section a {
+            color: #E3F2FD;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: #FFEB3B;
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #E3F2FD;
+        }
+        
+        /* Server Status Section */
+        .server-status {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+        
+        .status-title {
+            font-size: 1.5rem;
+            color: #FFEB3B;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+        
+        .status-text {
+            font-weight: bold;
+        }
+        
+        .status-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .status-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+        
+        .status-item h4 {
+            color: #FFEB3B;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Community Section */
+        .community-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .community-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
+        }
+        
+        .community-tab {
+            padding: 8px 20px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .community-tab.active {
+            background: var(--accent);
+            color: #1A237E;
+            font-weight: bold;
+        }
+        
+        .community-tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .community-content {
+            display: none;
+        }
+        
+        .community-content.active {
+            display: block;
+        }
+        
+        .post {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .post-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .post-author {
+            font-weight: bold;
+            color: #FFEB3B;
+        }
+        
+        .post-time {
+            font-size: 0.8rem;
+            color: #E3F2FD;
+        }
+        
+        .post-content {
+            margin-bottom: 1rem;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .post-action {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #E3F2FD;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .post-action:hover {
+            color: #FFEB3B;
+        }
+        
+        .new-post {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .new-post textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 1rem;
+        }
+        
+        .new-post textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .new-post button {
+            background: var(--accent);
+            color: #1A237E;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .new-post button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
+        }
+        
+        /* Profile Page */
+        .profile-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--accent);
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-info h2 {
+            color: #FFEB3B;
+            margin-bottom: 0.5rem;
+        }
+        
+        .profile-role {
+            background: var(--accent);
+            color: #1A237E;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-stat {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .profile-stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #FFEB3B;
+            margin-bottom: 0.5rem;
+        }
+        
+        .profile-stat-label {
+            font-size: 0.9rem;
+            color: #E3F2FD;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .rules-container {
+                padding: 1.5rem;
+            }
+            
+            .header-btns {
+                margin-top: 1rem;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.5s;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .notification.success {
+            background: var(--success);
+        }
+        
+        .notification.error {
+            background: var(--error);
+        }
+        
+        .notification.warning {
+            background: var(--warning);
+        }
+        
+        .notification i {
+            font-size: 1.2rem;
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('loginModal')">&times;</span>
+            <h2 class="modal-title">Anmelden</h2>
+            <div class="avatar-preview">
+                <i class="fas fa-user" id="loginAvatarIcon"></i>
+                <img id="loginAvatarImg" style="display: none;" src="" alt="Avatar">
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsername">Benutzername</label>
+                    <input type="text" id="loginUsername" placeholder="Dein Benutzername" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Passwort</label>
+                    <input type="password" id="loginPassword" placeholder="Dein Passwort" required>
+                </div>
+                <button type="submit" class="form-btn">Anmelden</button>
+            </form>
+            <div class="form-footer">
+                <p>Noch kein Konto? <a onclick="showRegister()">Registrieren</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('registerModal')">&times;</span>
+            <h2 class="modal-title">Registrieren</h2>
+            <div class="avatar-preview">
+                <i class="fas fa-user" id="registerAvatarIcon"></i>
+                <img id="registerAvatarImg" style="display: none;" src="" alt="Avatar">
+            </div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerUsername">Benutzername</label>
+                    <input type="text" id="registerUsername" placeholder="Wähle einen Benutzernamen" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">E-Mail</label>
+                    <input type="email" id="registerEmail" placeholder="Deine E-Mail Adresse" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Passwort</label>
+                    <input type="password" id="registerPassword" placeholder="Erstelle ein sicheres Passwort" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerRobloxUsername">Roblox Benutzername</label>
+                    <input type="text" id="registerRobloxUsername" placeholder="Dein Roblox Benutzername" required>
+                    <small style="color: #E3F2FD; font-size: 0.8rem;">Wir benötigen deinen Roblox-Benutzernamen für die Verifikation</small>
+                </div>
+                <button type="submit" class="form-btn">Konto erstellen</button>
+            </form>
+            <div class="form-footer">
+                <p>Bereits ein Konto? <a onclick="showLogin()">Anmelden</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- User Menu -->
+    <div class="user-menu" id="userMenu">
+        <div class="user-info">
+            <div class="user-avatar">
+                <img id="userMenuAvatar" src="" alt="Avatar">
+            </div>
+            <div class="user-details">
+                <div class="user-name" id="userMenuName">Benutzername</div>
+                <div class="user-role" id="userMenuRole">Mitglied</div>
+            </div>
+        </div>
+        <ul class="user-actions">
+            <li><a href="#" onclick="showProfile(); return false;"><i class="fas fa-user"></i> Profil</a></li>
+            <li><a href="#" onclick="showCommunity(); return false;"><i class="fas fa-users"></i> Community</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Einstellungen</a></li>
+            <li><a class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Abmelden</a></li>
+        </ul>
+    </div>
+    
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <div class="logo-img">GC</div>
+                <h1>GermanCity RP</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#rules">Regeln</a></li>
+                    <li><a href="#community" onclick="showCommunity(); return false;">Community</a></li>
+                    <li><a href="#team">Team</a></li>
+                    <li><a href="#join">Beitreten</a></li>
+                </ul>
+            </nav>
+            <div class="header-btns" id="authButtons">
+                <div class="login-btn" onclick="showLogin()">Anmelden</div>
+                <div class="register-btn" onclick="showRegister()">Registrieren</div>
+            </div>
+            <div id="userAvatar" style="display: none; width: 40px; height: 40px; border-radius: 50%; overflow: hidden; cursor: pointer;" onclick="toggleUserMenu()">
+                <img id="userAvatarImg" src="" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h2>Willkommen bei GermanCity RP</h2>
+            <p>Der beste deutsche Roleplay-Server auf Roblox! Tauche ein in eine lebendige Stadt, werde Teil der Community und erlebe spannende Abenteuer.</p>
+            <a href="#join" class="btn">Jetzt beitreten</a>
+        </div>
+    </section>
+
+    <section id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Server Features</h2>
+                <p>Entdecke, was GermanCity RP so einzigartig macht</p>
+            </div>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-city"></i></div>
+                    <h3>Realistische Stadt</h3>
+                    <p>Eine detailreiche Stadt mit verschiedenen Vierteln, Geschäften und öffentlichen Einrichtungen.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-briefcase"></i></div>
+                    <h3>Viele Berufe</h3>
+                    <p>Werde Polizist, Arzt, Feuerwehrmann, Mechaniker oder starte deine eigene Karriere als Unternehmer.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-home"></i></div>
+                    <h3>Eigenes Haus</h3>
+                    <p>Kaufe oder miete dir dein eigenes Haus und gestalte es nach deinen Wünschen.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-car"></i></div>
+                    <h3>Fahrzeuge</h3>
+                    <p>Eine große Auswahl an Fahrzeugen, die du kaufen, tunen und fahren kannst.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Wirtschaftssystem</h3>
+                    <p>Ein ausgeklügeltes Wirtschaftssystem mit verschiedenen Jobs und Geschäftsmöglichkeiten.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
+                    <h3>Aktive Community</h3>
+                    <p>Eine freundliche und aktive Community, die immer für Rollenspiele bereit ist.</p>
+                </div>
+            </div>
+            
+            <!-- Server Status Section -->
+            <div class="server-status">
+                <div class="status-header">
+                    <h3 class="status-title">Server Status</h3>
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span class="status-text" id="serverStatus">Online</span>
+                    </div>
+                </div>
+                <div class="status-info">
+                    <div class="status-item">
+                        <h4>Aktive Spieler</h4>
+                        <p id="playerCount">24/50</p>
+                    </div>
+                    <div class="status-item">
+                        <h4>Server Version</h4>
+                        <p id="serverVersion">v2.4.1</p>
+                    </div>
+                    <div class="status-item">
+                        <h4>Ping</h4>
+                        <p id="serverPing">32ms</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="rules">
+        <div class="container">
+            <div class="section-title">
+                <h2>Server Regeln</h2>
+                <p>Damit alle Spieler Spaß haben, halte dich bitte an diese Regeln</p>
+            </div>
+            <div class="rules-container">
+                <div class="rule-category">
+                    <h3>Allgemeine Regeln</h3>
+                    <ol class="rule-list">
+                        <li>Respektiere alle Spieler und Teammitglieder.</li>
+                        <li>Beleidigungen, Rassismus und Diskriminierung sind strengstens verboten.</li>
+                        <li>Cheaten, Hacks oder Exploits sind nicht erlaubt.</li>
+                        <li>Werbung für andere Server ist untersagt.</li>
+                        <li>Spamming in Chat oder per Nachricht ist nicht gestattet.</li>
+                    </ol>
+                </div>
+                <div class="rule-category">
+                    <h3>Roleplay Regeln</h3>
+                    <ol class="rule-list">
+                        <li>Powergaming ist verboten (Handlungen erzwingen, die andere Spieler nicht kontrollieren können).</li>
+                        <li>Metagaming ist nicht erlaubt (Spielwissen für Rollenspiel nutzen).</li>
+                        <li>Fear-RP: Zeige angemessene Angst, wenn dein Charakter in Gefahr ist.</li>
+                        <li>New-Life-Regel: Nach dem Tod erinnerst du dich nicht an die Todesumstände.</li>
+                        <li>Bleibe in deiner Rolle und vermeide Out-of-Character im Spiel.</li>
+                    </ol>
+                </div>
+                <div class="rule-category">
+                    <h3>Fahrzeug Regeln</h3>
+                    <ol class="rule-list">
+                        <li>Fahre verantwortungsvoll und riskiere keine unnötigen Unfälle.</li>
+                        <li>Parke Fahrzeuge ordnungsgemäß und blockiere keine wichtigen Zugänge.</li>
+                        <li>Diebstahl von Fahrzeugen ist nur im Rahmen des Rollenspiels erlaubt.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section id="community" style="display: none;">
+        <div class="container">
+            <div class="section-title">
+                <h2>Community</h2>
+                <p>Trete der GermanCity RP Community bei und tausche dich mit anderen Spielern aus</p>
+            </div>
+            <div class="community-container">
+                <div class="community-tabs">
+                    <div class="community-tab active" data-tab="posts">Beiträge</div>
+                    <div class="community-tab" data-tab="members">Mitglieder</div>
+                    <div class="community-tab" data-tab="groups">Gruppen</div>
+                </div>
+                
+                <div class="community-content active" id="posts-content">
+                    <div class="new-post">
+                        <textarea placeholder="Was möchtest du mit der Community teilen?"></textarea>
+                        <button>Beitrag posten</button>
+                    </div>
+                    
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="post-avatar">
+                                <img src="https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=2616592866&size=100x100&format=Png&isCircular=true" alt="Avatar">
+                            </div>
+                            <div>
+                                <div class="post-author">aloesisi</div>
+                                <div class="post-time">Vor 2 Stunden</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p>Hey Leute! Das neue Update ist live! Checkt die neuen Fahrzeuge und Features aus und gebt mir Feedback! 🚗✨</p>
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action"><i class="fas fa-heart"></i> 24</div>
+                            <div class="post-action"><i class="fas fa-comment"></i> 8</div>
+                            <div class="post-action"><i class="fas fa-share"></i> Teilen</div>
+                        </div>
+                    </div>
+                    
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="post-avatar">
+                                <img src="https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=2874969925&size=100x100&format=Png&isCircular=true" alt="Avatar">
+                            </div>
+                            <div>
+                                <div class="post-author">DivineKarma3313</div>
+                                <div class="post-time">Vor 5 Stunden</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p>Wir suchen noch aktive Polizisten für unser Team! Bewerbungen können im Discord eingereicht werden. 🚓</p>
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action"><i class="fas fa-heart"></i> 18</div>
+                            <div class="post-action"><i class="fas fa-comment"></i> 12</div>
+                            <div class="post-action"><i class="fas fa-share"></i> Teilen</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="community-content" id="members-content">
+                    <h3>Community Mitglieder</h3>
+                    <p>Hier siehst du alle Mitglieder der GermanCity RP Community.</p>
+                    <!-- Mitgliederliste würde hier dynamisch geladen -->
+                </div>
+                
+                <div class="community-content" id="groups-content">
+                    <h3>Gruppen</h3>
+                    <p>Tritt einer Gruppe bei oder gründe deine eigene!</p>
+                    <!-- Gruppenliste würde hier dynamisch geladen -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="team">
+        <div class="container">
+            <div class="section-title">
+                <h2>Unser Team</h2>
+                <p>Die Menschen hinter GermanCity RP</p>
+            </div>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="team-img">
+                        <img src="https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=2616592866&size=420x420&format=Png&isCircular=false" alt="aloesisi">
+                    </div>
+                    <div class="team-info">
+                        <h3>aloesisi</h3>
+                        <div class="team-role">Owner</div>
+                        <p>Gründer und Hauptentwickler von GermanCity RP. Verantwortlich für die Leitung des Projekts.</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-discord"></i></a>
+                            <a href="#"><i class="fab fa-roblox"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-img">
+                        <img src="https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=2874969925&size=420x420&format=Png&isCircular=false" alt="DivineKarma3313">
+                    </div>
+                    <div class="team-info">
+                        <h3>DivineKarma3313</h3>
+                        <div class="team-role">Manager</div>
+                        <p>Verwaltet den Serverbetrieb und koordiniert das Team. Ansprechpartner für organisatorische Fragen.</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-discord"></i></a>
+                            <a href="#"><i class="fab fa-roblox"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-img">
+                        <img src="https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=3212473211&size=420x420&format=Png&isCircular=false" alt="Palutenpr123">
+                    </div>
+                    <div class="team-info">
+                        <h3>Palutenpr123</h3>
+                        <div class="team-role">Verwaltung</div>
+                        <p>Zuständig für die Administration und die Einhaltung der Serverregeln.</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-discord"></i></a>
+                            <a href="#"><i class="fab fa-roblox"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-img">
+                        <img src="https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=2948517354&size=420x420&format=Png&isCircular=false" alt="can_angler14">
+                    </div>
+                    <div class="team-info">
+                        <h3>can_angler14</h3>
+                        <div class="team-role">Supporter</div>
+                        <p>Hilft unseren Spielern bei Fragen und Problemen und unterstützt das Team.</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-discord"></i></a>
+                            <a href="#"><i class="fab fa-roblox"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-img">
+                        <img src="https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=3012476842&size=420x420&format=Png&isCircular=false" alt="The_Forest41">
+                    </div>
+                    <div class="team-info">
+                        <h3>The_Forest41</h3>
+                        <div class="team-role">Stv. Projektinhaber</div>
+                        <p>Stellvertretender Projektleiter und unterstützt bei der Entwicklung und Organisation.</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-discord"></i></a>
+                            <a href="#"><i class="fab fa-roblox"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profile Section -->
+    <section id="profile" style="display: none;">
+        <div class="container">
+            <div class="section-title">
+                <h2>Profil</h2>
+                <p>Verwalte dein Profil und sieh deine Statistiken an</p>
+            </div>
+            <div class="profile-container">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <img id="profileAvatar" src="" alt="Avatar">
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="profileUsername">Benutzername</h2>
+                        <div class="profile-role" id="profileRole">Mitglied</div>
+                        <p>Mitglied seit: <span id="profileJoinDate">01.01.2023</span></p>
+                        <p>Roblox-Benutzername: <span id="profileRobloxName">ExampleUser</span></p>
+                    </div>
+                </div>
+                
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">24</div>
+                        <div class="profile-stat-label">Stunden gespielt</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">15</div>
+                        <div class="profile-stat-label">Freunde</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value">8</div>
+                        <div class="profile-stat-label">Beiträge</div>
+                    </div>
+                </div>
+                
+                <h3>Deine letzten Aktivitäten</h3>
+                <div class="post">
+                    <div class="post-header">
+                        <div class="post-avatar">
+                            <img id="profileSmallAvatar" src="" alt="Avatar">
+                        </div>
+                        <div>
+                            <div class="post-author" id="profilePostAuthor">Benutzername</div>
+                            <div class="post-time">Vor 2 Tagen</div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>Hey, ich habe gerade den neuen Porsche im Spiel getestet. Das Fahrverhalten ist super! 🚗</p>
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-action"><i class="fas fa-heart"></i> 5</div>
+                        <div class="post-action"><i class="fas fa-comment"></i> 2</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="join" id="join">
+        <div class="container">
+            <h2>Werde Teil unserer Community</h2>
+            <p>Tauche ein in die Welt von GermanCity RP und erlebe ein einzigartiges Roleplay-Erlebnis auf Roblox!</p>
+            <a href="roblox://placeID=123456789" class="btn">Server beitreten</a>
+            <p style="margin-top: 2rem; position: relative;">Oder suche nach "GermanCity RP" in Roblox</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>GermanCity RP</h3>
+                    <p>Der beste deutsche Roleplay-Server auf Roblox. Tauche ein in eine lebendige Stadt und erlebe spannende Abenteuer.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#rules">Regeln</a></li>
+                        <li><a href="#community" onclick="showCommunity(); return false;">Community</a></li>
+                        <li><a href="#team">Team</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Kontakt</h3>
+                    <ul>
+                        <li>Email: info@germancity-rp.de</li>
+                        <li>Discord: discord.gg/germancity</li>
+                        <li>Roblox: GermanCity RP</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 GermanCity RP - Alle Rechte vorbehalten</p>
+                <p>Diese Seite ist nicht mit Roblox Corporation affiliiert.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification Element -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Erfolgreich angemeldet!</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Partikel-Hintergrund initialisieren
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#ffffff" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#ffffff",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "grab" },
+                        onclick: { enable: true, mode: "push" },
+                        resize: true
+                    }
+                },
+                retina_detect: true
+            });
+            
+            // Scroll-Animationen
+            const animatedElements = document.querySelectorAll('.feature-card, .rule-category, .gallery-item, .team-member');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            animatedElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // Community Tabs
+            const communityTabs = document.querySelectorAll('.community-tab');
+            communityTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    communityTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    const tabName = tab.getAttribute('data-tab');
+                    document.querySelectorAll('.community-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(`${tabName}-content`).classList.add('active');
+                });
+            });
+            
+            // Prüfen, ob Benutzer bereits angemeldet ist
+            checkLoginStatus();
+            
+            // Server-Status aktualisieren
+            updateServerStatus();
+        });
+        
+        // Modal-Funktionen
+        function showLogin() {
+            document.getElementById('loginModal').style.display = 'flex';
+            document.getElementById('registerModal').style.display = 'none';
+        }
+        
+        function showRegister() {
+            document.getElementById('registerModal').style.display = 'flex';
+            document.getElementById('loginModal').style.display = 'none';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        // Community anzeigen
+        function showCommunity() {
+            document.getElementById('community').style.display = 'block';
+            document.getElementById('profile').style.display = 'none';
+            window.scrollTo(0, document.getElementById('community').offsetTop - 80);
+        }
+        
+        // Profil anzeigen
+        function showProfile() {
+            if (localStorage.getItem('userLoggedIn') === 'true') {
+                document.getElementById('profile').style.display = 'block';
+                document.getElementById('community').style.display = 'none';
+                
+                // Profildaten füllen
+                document.getElementById('profileUsername').textContent = localStorage.getItem('username');
+                document.getElementById('profileRole').textContent = localStorage.getItem('userRole');
+                document.getElementById('profileAvatar').src = localStorage.getItem('userAvatar');
+                document.getElementById('profileSmallAvatar').src = localStorage.getItem('userAvatar');
+                document.getElementById('profilePostAuthor').textContent = localStorage.getItem('username');
+                document.getElementById('profileRobloxName').textContent = localStorage.getItem('robloxUsername') || 'Nicht angegeben';
+                document.getElementById('profileJoinDate').textContent = localStorage.getItem('joinDate') || '01.01.2023';
+                
+                window.scrollTo(0, document.getElementById('profile').offsetTop - 80);
+            } else {
+                showNotification('Bitte melde dich an, um dein Profil zu sehen', 'warning');
+                showLogin();
+            }
+        }
+        
+        // Klick außerhalb des Modals schließt es
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+            
+            // User-Menü schließen wenn außerhalb geklickt wird
+            if (!event.target.closest('#userAvatar') && !event.target.closest('.user-menu')) {
+                document.getElementById('userMenu').style.display = 'none';
+            }
+        }
+        
+        // Benutzer-Menü anzeigen/ausblenden
+        function toggleUserMenu() {
+            const userMenu = document.getElementById('userMenu');
+            userMenu.style.display = userMenu.style.display === 'block' ? 'none' : 'block';
+        }
+        
+        // Abmelden
+        function logout() {
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('username');
+            localStorage.removeItem('userAvatar');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('robloxUsername');
+            
+            document.getElementById('authButtons').style.display = 'flex';
+            document.getElementById('userAvatar').style.display = 'none';
+            document.getElementById('userMenu').style.display = 'none';
+            document.getElementById('profile').style.display = 'none';
+            
+            showNotification('Erfolgreich abgemeldet!', 'success');
+        }
+        
+        // Login-Status prüfen
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('userLoggedIn');
+            
+            if (isLoggedIn === 'true') {
+                const username = localStorage.getItem('username');
+                const avatar = localStorage.getItem('userAvatar');
+                const role = localStorage.getItem('userRole');
+                
+                document.getElementById('authButtons').style.display = 'none';
+                document.getElementById('userAvatar').style.display = 'block';
+                document.getElementById('userAvatarImg').src = avatar;
+                document.getElementById('userMenuName').textContent = username;
+                document.getElementById('userMenuRole').textContent = role;
+                document.getElementById('userMenuAvatar').src = avatar;
+            }
+        }
+        
+        // Echte Roblox API Integration
+        async function getRobloxUserAvatar(username) {
+            try {
+                // Zuerst UserId abrufen
+                const userResponse = await fetch(`https://api.roblox.com/users/get-by-username?username=${username}`);
+                if (!userResponse.ok) {
+                    throw new Error('Roblox Benutzer nicht gefunden');
+                }
+                
+                const userData = await userResponse.json();
+                const userId = userData.Id;
+                
+                // Dann Avatar mit der UserId abrufen
+                const avatarResponse = await fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=420x420&format=Png&isCircular=false`);
+                if (!avatarResponse.ok) {
+                    throw new Error('Avatar konnte nicht geladen werden');
+                }
+                
+                const avatarData = await avatarResponse.json();
+                return avatarData.data[0].imageUrl;
+            } catch (error) {
+                console.error('Fehler beim Abrufen des Roblox-Avatars:', error);
+                // Fallback Avatar
+                return `https://robohash.org/${username}?set=set4&size=100x100`;
+            }
+        }
+        
+        async function getRobloxUserInfo(username) {
+            try {
+                const response = await fetch(`https://api.roblox.com/users/get-by-username?username=${username}`);
+                if (!response.ok) {
+                    throw new Error('Roblox Benutzer nicht gefunden');
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Fehler beim Abrufen der Roblox-Benutzerinfo:', error);
+                return null;
+            }
+        }
+        
+        // Login-Formular verarbeiten
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Einfache Demo-Authentifizierung
+            if (username && password) {
+                // Avatar von Roblox API abrufen (Demo: zufälliger Avatar)
+                const randomAvatar = `https://robohash.org/${username}?set=set2&size=100x100`;
+                
+                // Benutzerdaten speichern
+                localStorage.setItem('userLoggedIn', 'true');
+                localStorage.setItem('username', username);
+                localStorage.setItem('userAvatar', randomAvatar);
+                localStorage.setItem('userRole', 'Mitglied');
+                
+                // UI aktualisieren
+                document.getElementById('authButtons').style.display = 'none';
+                document.getElementById('userAvatar').style.display = 'block';
+                document.getElementById('userAvatarImg').src = randomAvatar;
+                document.getElementById('userMenuName').textContent = username;
+                document.getElementById('userMenuRole').textContent = 'Mitglied';
+                document.getElementById('userMenuAvatar').src = randomAvatar;
+                
+                // Modal schließen
+                closeModal('loginModal');
+                
+                // Notification anzeigen
+                showNotification('Erfolgreich angemeldet!', 'success');
+            } else {
+                showNotification('Bitte fülle alle Felder aus!', 'error');
+            }
+        });
+        
+        // Registrierungs-Formular verarbeiten
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const robloxUsername = document.getElementById('registerRobloxUsername').value;
+            
+            if (username && email && password && robloxUsername) {
+                try {
+                    // Ladeanimation anzeigen
+                    document.getElementById('registerAvatarIcon').style.display = 'none';
+                    document.getElementById('registerAvatarImg').style.display = 'block';
+                    document.getElementById('registerAvatarImg').src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMTgiIHN0cm9rZT0iI0ZGMEEwMCIgc3Ryb2tlLXdpZHRoPSI0Ii8+CjxwYXRoIGQ9Ik0xMCAyMC4wMDgzQzEwIDE1LjU4MjIgMTMuNTgyMSAxMi4wMDgzIDE4IDEyLjAwODNDMjIuNDE3OSAxMi4wMDgzIDI2IDE1LjU4MjIgMjYgMjAuMDA4MyIgc3Ryb2tlPSIjRkYwQTAwIiBzdHJva2Utd2lkdGg9IjQiLz4KPC9zdmc+';
+                    
+                    // Roblox Avatar abrufen
+                    const avatarUrl = await getRobloxUserAvatar(robloxUsername);
+                    
+                    // Roblox Benutzerinfo abrufen
+                    const userInfo = await getRobloxUserInfo(robloxUsername);
+                    
+                    // Benutzerdaten speichern
+                    localStorage.setItem('userLoggedIn', 'true');
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('userAvatar', avatarUrl);
+                    localStorage.setItem('userRole', 'Neuling');
+                    localStorage.setItem('robloxUsername', robloxUsername);
+                    localStorage.setItem('joinDate', new Date().toLocaleDateString('de-DE'));
+                    
+                    if (userInfo) {
+                        localStorage.setItem('robloxUserId', userInfo.Id);
+                    }
+                    
+                    // UI aktualisieren
+                    document.getElementById('authButtons').style.display = 'none';
+                    document.getElementById('userAvatar').style.display = 'block';
+                    document.getElementById('userAvatarImg').src = avatarUrl;
+                    document.getElementById('userMenuName').textContent = username;
+                    document.getElementById('userMenuRole').textContent = 'Neuling';
+                    document.getElementById('userMenuAvatar').src = avatarUrl;
+                    
+                    // Modal schließen
+                    closeModal('registerModal');
+                    
+                    // Notification anzeigen
+                    showNotification('Konto erfolgreich erstellt!', 'success');
+                } catch (error) {
+                    showNotification('Fehler beim Erstellen des Kontos: ' + error.message, 'error');
+                }
+            } else {
+                showNotification('Bitte fülle alle Pflichtfelder aus!', 'error');
+            }
+        });
+        
+        // Roblox Avatar abrufen bei Eingabe
+        document.getElementById('registerRobloxUsername').addEventListener('blur', async function() {
+            const robloxUsername = this.value;
+            
+            if (robloxUsername) {
+                try {
+                    document.getElementById('registerAvatarIcon').style.display = 'none';
+                    document.getElementById('registerAvatarImg').style.display = 'block';
+                    document.getElementById('registerAvatarImg').src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMTgiIHN0cm9rZT0iI0ZGMEEwMCIgc3Ryb2tlLXdpZHRoPSI0Ii8+CjxwYXRoIGQ9Ik0xMCAyMC4wMDgzQzEwIDE1LjU4MjIgMTMuNTgyMSAxMi4wMDgzIDE4IDEyLjAwODNDMjIuNDE3OSAxMi4wMDgzIDI2IDE1LjU4MjIgMjYgMjAuMDA4MyIgc3Ryb2tlPSIjRkYwQTAwIiBzdHJva2Utd2lkdGg9IjQiLz4KPC9zdmc+';
+                    
+                    const avatarUrl = await getRobloxUserAvatar(robloxUsername);
+                    document.getElementById('registerAvatarImg').src = avatarUrl;
+                } catch (error) {
+                    document.getElementById('registerAvatarIcon').style.display = 'block';
+                    document.getElementById('registerAvatarImg').style.display = 'none';
+                    showNotification('Roblox Benutzer nicht gefunden', 'error');
+                }
+            }
+        });
+        
+        // Notification anzeigen
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.className = 'notification';
+            }, 3000);
+        }
+        
+        // Server-Status aktualisieren (Demo)
+        function updateServerStatus() {
+            // Simulierte Server-Daten
+            const playerCount = Math.floor(Math.random() * 50) + 1;
+            const ping = Math.floor(Math.random() * 100) + 10;
+            
+            document.getElementById('playerCount').textContent = `${playerCount}/50`;
+            document.getElementById('serverPing').textContent = `${ping}ms`;
+            
+            // Alle 30 Sekunden aktualisieren
+            setTimeout(updateServerStatus, 30000);
+        }
+    </script>
+</body>
+</html>
